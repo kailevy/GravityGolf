@@ -74,7 +74,11 @@ class GolfGame():
     		last_ticks = t
 
     		done = self.controller.process_events() # Process all events
-    		
+    		self.model.update(dt) # Update model based on events
+    		self.view.draw() # Draw view
+
+    		self.clock.tick(25) # Change in time
+
 
 class Ball(pygame.sprite.Sprite):
     """Represents a ball, for extension into: game ball, gravity ball..."""
@@ -102,8 +106,23 @@ class Level(pygame.sprite.Sprite):
 
 class Tile(pygame.sprite.Sprite):
     """Represents a tile, for extension into: friction tile, wall tile, acceleration tile..."""
-    def __init__(self):
-        pass 
+    def __init__(self, x_pos, y_pos):
+    	pygame.sprite.Sprite.__init__(self)
+
+    	self.x_pos = x_pos
+    	self.y_pos = y_pos
+
+    	self.image = pygame.image.load('img/wallTile.png')
+    	self.rect = self.image.get_rect()
+
+    	self.rect = self.rect.move(self.x_pos, self.y_pos)
+
+	def draw(self, screen):
+		screen.blit(self.image.convert_alpha(), self.rect)
+
+# class AccelTile(Tile)
+
+        
 
 if __name__ == '__main__':
     pass
