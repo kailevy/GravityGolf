@@ -120,7 +120,17 @@ class Tile(pygame.sprite.Sprite):
 	def draw(self, screen):
 		screen.blit(self.image.convert_alpha(), self.rect)
 
-# class AccelTile(Tile)
+class AccelTile(Tile):
+	def __init__(self, x_pos, y_pos, acceleration):
+		Tile.__init__(self, x_pos, y_pos)
+		if acceleration == -1:
+			self.image = pygame.image.load('img/negAccelTile')
+		if acceleration == 1:
+			self.image = pygame.image.load('img/posAccelTile')
+		if acceleration == 3:
+			self.image = pygame.image.load('img/rightAccelTile')
+		if acceleration == 4:
+			self.image = pygame.image.load('img/leftAccelTile')
 
         
 
