@@ -20,7 +20,22 @@ RED      = ( 255,   0,   0)
 GREEN    = (   0, 255,   0)
 
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
-particle moving in the xy
+
+# Define global tiled level arrays
+level0 = np.array(
+   [(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)])
+
 class GolfModel():
     """Represents the game state"""
     def __init__(self, width, height):
@@ -130,7 +145,7 @@ class AccelTile(Tile):
 		if acceleration == 3:
 			self.image = pygame.image.load('img/rightAccelTile')
 		if acceleration == 4:
-			self.image = pygame.image.load('img/leftAccelTile')
+			self.image = pygame.image.load('img/leftAccelTile') 
 
         
 
