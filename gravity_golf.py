@@ -100,7 +100,7 @@ class GolfGame():
             self.model.update(dt) # Update model based on events
             self.view.draw() # Draw view
 
-            self.clock.tick(60) # Change in time
+            self.clock.tick(100) # Change in time
 
 
 class Ball(pygame.sprite.Sprite):
@@ -114,8 +114,8 @@ class Ball(pygame.sprite.Sprite):
 
         self.pos_x = pos_x
         self.pos_y = pos_y
-        self.vel_x = 100
-        self.vel_y = 100
+        self.vel_x = 500
+        self.vel_y = 500
         self.acc_x = 0
         self.acc_y = 0
 
@@ -136,18 +136,20 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self, dt):
         """ Update ball due to passage of time """
-
+        print self.vel_y
+        print self.vel_x
         # x-axis updates and collisions
         self.rect.x += self.vel_x * dt
+        self.collide(self.vel_x, 0)
         self.vel_x += self.acc_x * dt
         self.acc_x = 0
-        self.collide(self.vel_x, 0)
-
+        
         # y-axis updates and collisions
         self.rect.y += self.vel_y*dt
+        self.collide(0, self.vel_y)
         self.vel_y += self.acc_y * dt
         self.acc_y = 0
-        self.collide(0, self.vel_y)
+
 
     def collide(self, vel_x, vel_y):
         """ Handle collisions between ball and walls """
@@ -155,45 +157,55 @@ class Ball(pygame.sprite.Sprite):
         for tile in self.tiles:
 
             if pygame.sprite.collide_rect(self, tile):
-                print "collision!"
+                # print "collision!"
                 if isinstance(tile, ExitTile):
                     pass
                     #TODO: implement going to next level event
 
-                #slow down on friction
+                # slow down on friction
                 if vel_x != 0 and isinstance(tile, FrictionTile):
-                    if vel_x < 0:
-                        self.acc_x = tile.mu
-                    elif vel_x > 0:
-                        self.acc_x = -1 * tile.mu
                     if abs(vel_x) < 1:
                         self.vel_x = 0
                         self.acc_x = 0
+                    elif vel_x < 0:
+                        print '1'
+                        self.acc_x = tile.mu
+                    elif vel_x > 0:
+                        print '2'
+                        self.acc_x = -1 * tile.mu
+
                     
                 if vel_y != 0 and isinstance(tile, FrictionTile):
-                    if vel_y < 0:
-                        self.acc_y = tile.mu
-                    elif vel_y > 0:
-                        self.acc_y = -1 * tile.mu
                     if abs(vel_y) < 1:
                         self.vel_y = 0
                         self.acc_y = 0
+                    elif vel_y < 0:
+                        print '3'
+                        self.acc_y = tile.mu
+                    elif vel_y > 0:
+                        print '4'
+                        self.acc_y = -1 * tile.mu
+
 
                 if vel_x != 0 and isinstance(tile, WallTile):
-                    self.vel_x *= -1
                     self.acc_x = 0
                     if vel_x > 0:
+                        # print 'a'
                         self.rect.right = tile.rect.left
                     elif vel_x < 0:
+                        # print 'b'
                         self.rect.left = tile.rect.right
+                    self.vel_x *= -1
                 
                 if vel_y != 0 and isinstance(tile, WallTile):
-                    self.vel_y *= -1
                     self.acc_y = 0
                     if vel_y > 0:
+                        # print 'c'
                         self.rect.bottom = tile.rect.top
                     elif vel_y < 0:
+                        # print 'd'
                         self.rect.top = tile.rect.bottom
+                    self.vel_y *= -1
 
 
 class Level(pygame.sprite.Sprite):
@@ -212,7 +224,7 @@ class Level(pygame.sprite.Sprite):
                     tile = WallTile(x*50, row*50)
                     self.tiles.add(tile)
                 if self.map[row][x] == 2:
-                    tile = FrictionTile(x*50, row*50, 3)
+                    tile = FrictionTile(x*50, row*50, 20)
                     self.tiles.add(tile)
                 if self.map[row][x] == 3:
                     tile = ExitTile(x*50, row*50)
