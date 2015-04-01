@@ -52,7 +52,13 @@ class GolfModel():
 class GolfView():
     """Represents the view of the game"""
     def __init__(self, model):
-        pass 
+        pygame.init()
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+        self.model = model
+
+    def draw(self):
+        self.model.level.draw(self.screen)
+        pygame.display.update()
 
 class GolfController():
 	""" Represents controller for Gravity Golf Game """
@@ -64,7 +70,7 @@ class GolfController():
 		pygame.event.pump()
 
 
-		for event in pygame.event.get():
+		# for event in pygame.event.get():
 
 			#Define events that game elements should respond to
 
@@ -110,7 +116,9 @@ class Level(pygame.sprite.Sprite):
 		#Creates map of tiles from inputted np array
 		for row in xrange(len(self.map)):
 			for x in xrange(len(self.map[row])):
-
+                if self.map[row][x] == 0:
+                    tile = FrictionTile(x*50, row*50)
+                    self.tiles.add(tile)
 				#For each element in array, create relevant tile
 
 				#TODO: define all tile class(es)
@@ -147,6 +155,10 @@ class AccelTile(Tile):
 		if acceleration == 4:
 			self.image = pygame.image.load('img/leftAccelTile') 
 
+class FrictionTile(Tile):
+    def __init__(self, x_pos, y_pos):
+        Tile.__init__(self, x_pos, y_pos)
+        self.image = pygame.image.load('img/frictionTile')
         
 
 if __name__ == '__main__':
