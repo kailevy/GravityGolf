@@ -123,7 +123,7 @@ class Ball(pygame.sprite.Sprite):
         self.tiles = tiles
         self.onGround = False
 
-        self.image = pygame.image.load('img/mario.png')
+        self.image = pygame.image.load('img/ball.png')
         self.rect = self.image.get_rect()
 
         self.rect = self.rect.move(pos_x, pos_y)
@@ -136,11 +136,12 @@ class Ball(pygame.sprite.Sprite):
         """ Update ball due to passage of time """
 
         # x-axis updates and collisions
-        self.rect.x += self.x_vel*dt
-        self.collide(self.x_vel, 0)
+        self.rect.x += self.vel_x *dt
+        self.collide(self.vel_x, 0)
 
         # y-axis updates and collisions
-
+        self.rect.y += self.vel_y*dt
+        self.collide(0, self.vel_y)
 
 class Level(pygame.sprite.Sprite):
 	""" Represents a level """
@@ -152,12 +153,15 @@ class Level(pygame.sprite.Sprite):
 		#Creates map of tiles from inputted np array
 		for row in xrange(len(self.map)):
 			for x in xrange(len(self.map[row])):
-                if self.map[row][x] == 0:
-                    tile = FrictionTile(x*50, row*50)
-                    self.tiles.add(tile)
 				#For each element in array, create relevant tile
 
-				#TODO: define all tile class(es)
+				if self.map[row][x] == 1:
+                    tile = Tile(x*50, row*50)
+                    self.tiles.add(tile)
+                if self.map[row][x] == 1:
+                    tile = Tile(x*50, row*50)
+                    self.tiles.add(tile)
+
 
 	def draw(self, screen):
 		for tile in self.tiles:
@@ -182,20 +186,25 @@ class Tile(pygame.sprite.Sprite):
 class AccelTile(Tile):
 	def __init__(self, x_pos, y_pos, acceleration):
 		Tile.__init__(self, x_pos, y_pos)
-		if acceleration == -1:
+		if acceleration == 0:
 			self.image = pygame.image.load('img/negAccelTile')
 		if acceleration == 1:
 			self.image = pygame.image.load('img/posAccelTile')
-		if acceleration == 3:
+		if acceleration == 2:
 			self.image = pygame.image.load('img/rightAccelTile')
-		if acceleration == 4:
+		if acceleration == 3:
 			self.image = pygame.image.load('img/leftAccelTile') 
 
-class FrictionTile(Tile):
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(self.x_pos, self.y_pos)
+
+class ExitTile(Tile):
     def __init__(self, x_pos, y_pos):
         Tile.__init__(self, x_pos, y_pos)
-        self.image = pygame.image.load('img/frictionTile')
-        
+        self.image = pygame.image.load('img/exitTile.png')
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(self.x_pos, self.y_pos)        
 
 if __name__ == '__main__':
-    pass
+    golf = GolfGame()
+    golf.run()
