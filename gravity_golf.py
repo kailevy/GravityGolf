@@ -23,18 +23,18 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
 # Define global tiled level arrays
 level0 = np.array(
-   [(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)])
+   [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1),
+    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
 
 class GolfModel():
     """Represents the game state"""
@@ -51,12 +51,15 @@ class GolfModel():
 
 class GolfView():
     """Represents the view of the game"""
-    def __init__(self, model):
+    def __init__(self, model, width, height):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.model = model
 
     def draw(self):
+        """ Redraw the full game window """
+        self.screen.fill((0,0,0)) #Set background to black
+        self.model.ball.draw(self.screen)
         self.model.level.draw(self.screen)
         pygame.display.update()
 
@@ -103,8 +106,41 @@ class GolfGame():
 
 class Ball(pygame.sprite.Sprite):
     """Represents a ball, for extension into: game ball, gravity ball..."""
-    def __init__(self):
-        pass 
+    def __init__(self, pos_x, pos_y, tiles):
+        """ Initialize a ball at specified position pos_x, pos_y """
+
+        pygame.sprite.Sprite.__init__(self)
+
+        #Set relevant state variables
+
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.vel_x = 0
+        self.vel_y = 0
+        self.acc_x = 0
+        self.acc_y = 0
+
+        self.tiles = tiles
+        self.onGround = False
+
+        self.image = pygame.image.load('img/mario.png')
+        self.rect = self.image.get_rect()
+
+        self.rect = self.rect.move(pos_x, pos_y)
+
+    def draw(self, screen):
+        # Draw ball with transparent background - convert_alpha
+        screen.blit(self.image.convert_alpha(), self.rect)
+
+    def update(self, dt):
+        """ Update ball due to passage of time """
+
+        # x-axis updates and collisions
+        self.rect.x += self.x_vel*dt
+        self.collide(self.x_vel, 0)
+
+        # y-axis updates and collisions
+
 
 class Level(pygame.sprite.Sprite):
 	""" Represents a level """
