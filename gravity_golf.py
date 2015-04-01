@@ -24,16 +24,16 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 # Define global tiled level arrays
 level0 = np.array(
    [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1),
-    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1),
+    (1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1),
+    (1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 1),
+    (1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1),
+    (1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1),
+    (1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
 
 all_levels = [level0]
@@ -61,8 +61,8 @@ class GolfView():
     def draw(self):
         """ Redraw the full game window """
         self.screen.fill((0,0,0)) #Set background to black
-        self.model.ball.draw(self.screen)
         self.model.level.draw(self.screen)
+        self.model.ball.draw(self.screen)
         pygame.display.update()
 
 class GolfController():
@@ -100,7 +100,7 @@ class GolfGame():
             self.model.update(dt) # Update model based on events
             self.view.draw() # Draw view
 
-            self.clock.tick(25) # Change in time
+            self.clock.tick(60) # Change in time
 
 
 class Ball(pygame.sprite.Sprite):
@@ -138,11 +138,15 @@ class Ball(pygame.sprite.Sprite):
         """ Update ball due to passage of time """
 
         # x-axis updates and collisions
-        self.rect.x += self.vel_x *dt
+        self.rect.x += self.vel_x * dt
+        self.vel_x += self.acc_x * dt
+        self.acc_x = 0
         self.collide(self.vel_x, 0)
 
         # y-axis updates and collisions
         self.rect.y += self.vel_y*dt
+        self.vel_y += self.acc_y * dt
+        self.acc_y = 0
         self.collide(0, self.vel_y)
 
     def collide(self, vel_x, vel_y):
@@ -156,21 +160,41 @@ class Ball(pygame.sprite.Sprite):
                     pass
                     #TODO: implement going to next level event
 
-                if vel_x > 0 and isinstance(tile, WallTile):
-                    self.rect.right = tile.rect.left
+                #slow down on friction
+                if vel_x != 0 and isinstance(tile, FrictionTile):
+                    if vel_x < 0:
+                        self.acc_x = tile.mu
+                    elif vel_x > 0:
+                        self.acc_x = -1 * tile.mu
+                    if abs(vel_x) < 1:
+                        self.vel_x = 0
+                        self.acc_x = 0
+                    
+                if vel_y != 0 and isinstance(tile, FrictionTile):
+                    if vel_y < 0:
+                        self.acc_y = tile.mu
+                    elif vel_y > 0:
+                        self.acc_y = -1 * tile.mu
+                    if abs(vel_y) < 1:
+                        self.vel_y = 0
+                        self.acc_y = 0
+
+                if vel_x != 0 and isinstance(tile, WallTile):
                     self.vel_x *= -1
-
-                if vel_x < 0 and isinstance(tile, WallTile):
-                    self.rect.left = tile.rect.right
-                    self.vel_x *= -1
-
-                if vel_y > 0 and isinstance(tile, WallTile):
-                    self.rect.bottom = tile.rect.top
+                    self.acc_x = 0
+                    if vel_x > 0:
+                        self.rect.right = tile.rect.left
+                    elif vel_x < 0:
+                        self.rect.left = tile.rect.right
+                
+                if vel_y != 0 and isinstance(tile, WallTile):
                     self.vel_y *= -1
+                    self.acc_y = 0
+                    if vel_y > 0:
+                        self.rect.bottom = tile.rect.top
+                    elif vel_y < 0:
+                        self.rect.top = tile.rect.bottom
 
-                if vel_y < 0 and isinstance(tile, WallTile):
-                    self.rect.top = tile.rect.bottom
-                    self.vel_y *= -1
 
 class Level(pygame.sprite.Sprite):
     """ Represents a level """
@@ -188,6 +212,9 @@ class Level(pygame.sprite.Sprite):
                     tile = WallTile(x*50, row*50)
                     self.tiles.add(tile)
                 if self.map[row][x] == 2:
+                    tile = FrictionTile(x*50, row*50, 3)
+                    self.tiles.add(tile)
+                if self.map[row][x] == 3:
                     tile = ExitTile(x*50, row*50)
                     self.tiles.add(tile)
 
@@ -212,8 +239,8 @@ class WallTile(Tile):
         Tile.__init__(self, x_pos, y_pos)
 
         self.image = pygame.image.load('img/wallTile.png')
+        
         self.rect = self.image.get_rect()
-
         self.rect = self.rect.move(self.x_pos, self.y_pos)
 
 class AccelTile(Tile):
@@ -231,10 +258,21 @@ class AccelTile(Tile):
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.x_pos, self.y_pos)
 
+class FrictionTile(Tile):
+    """ Represents a defaul ground tile that applies friction to the ball"""
+    def __init__(self, x_pos, y_pos, mu):
+        Tile.__init__(self, x_pos, y_pos)
+        self.image = pygame.image.load('img/frictionTile.png')
+        self.mu = mu
+
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(self.x_pos, self.y_pos)   
+
 class ExitTile(Tile):
     def __init__(self, x_pos, y_pos):
         Tile.__init__(self, x_pos, y_pos)
         self.image = pygame.image.load('img/exitTile.png')
+
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.x_pos, self.y_pos)        
 
