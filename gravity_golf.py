@@ -121,10 +121,6 @@ class Ball(pygame.sprite.Sprite):
 
         self.tiles = tiles
 
-        print "tiles:" 
-        print self.tiles
-        self.onGround = False
-
         self.image = pygame.image.load('img/ball.png')
         self.rect = self.image.get_rect()
 
@@ -136,6 +132,9 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self, dt):
         """ Update ball due to passage of time """
+
+        self.vel_x = self.vel_x*.99
+        self.vel_y = self.vel_y*.99
 
         # x-axis updates and collisions
         self.rect.x += self.vel_x *dt
