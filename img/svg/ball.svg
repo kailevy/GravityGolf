@@ -9,12 +9,43 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+<<<<<<< HEAD
    id="svg2"
+=======
+>>>>>>> 8b71c8d08cdce6cb7169d867ff0dd2fa468c4576
    version="1.1"
    inkscape:version="0.48.4 r9939"
    width="25"
    height="25"
+<<<<<<< HEAD
    sodipodi:docname="ball.png">
+=======
+   id="svg2"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="ball.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="831"
+     inkscape:window-height="579"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="9.44"
+     inkscape:cx="12.5"
+     inkscape:cy="12.5"
+     inkscape:window-x="592"
+     inkscape:window-y="199"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4" />
+>>>>>>> 8b71c8d08cdce6cb7169d867ff0dd2fa468c4576
   <metadata
      id="metadata8">
     <rdf:RDF>
@@ -27,6 +58,7 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+<<<<<<< HEAD
   <defs
      id="defs6" />
   <sodipodi:namedview
@@ -59,4 +91,24 @@
      sodipodi:ry="12.658898"
      d="m 27.118644,15.095339 a 12.658898,12.658898 0 1 1 -25.3177969,0 12.658898,12.658898 0 1 1 25.3177969,0 z"
      transform="matrix(0.9874477,0,0,0.9874477,-1.7782427,-2.4058578)" />
+=======
+  <g
+     transform="translate(0,-1027.3622)"
+     id="layer1"
+     style="stroke:#000000;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill:#eeeeee;fill-opacity:1"
+     inkscape:export-filename="/home/klevy/Documents/Olin/Mechanics/GravityGolf/img/ball.png"
+     inkscape:export-xdpi="85.239998"
+     inkscape:export-ydpi="85.239998">
+    <path
+       d="m 24.285714,19.598215 a 8.1696424,7.9017859 0 1 1 -16.3392847,0 8.1696424,7.9017859 0 1 1 16.3392847,0 z"
+       transform="matrix(1.5297646,0,0,1.58172,-12.156165,1008.8618)"
+       id="path2985"
+       style="fill:#eeeeee;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:0.64286960999999998;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       d="M 11.809109,24.954892 C 10.157412,24.87281 8.5293271,24.447201 7.014041,23.701379 5.5725044,22.991857 4.453686,22.163343 3.3648776,20.999077 1.5844755,19.095289 0.48479146,16.757394 0.11379651,14.087377 0.00739797,13.321637 0.00755968,11.669116 0.11410789,10.905397 0.42926003,8.6464393 1.195844,6.7798241 2.5643201,4.9391832 3.0255924,4.3187582 4.2751092,3.0586941 4.8706236,2.6134119 6.8046468,1.1672903 8.7958299,0.36611556 11.130534,0.09466684 c 0.760748,-0.08844972 2.490338,-0.06251542 3.175546,0.04761567 2.557032,0.41098267 4.786749,1.47223349 6.612415,3.14722939 2.715805,2.4916733 4.170491,5.9535364 4.045176,9.6267201 -0.136296,3.995088 -2.126648,7.624982 -5.420582,9.885756 -2.259779,1.550988 -4.923764,2.29256 -7.73398,2.152904 z"
+       transform="translate(0,1027.3622)"
+       id="path2987"
+       style="fill:#eeeeee;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none" />
+  </g>
+>>>>>>> 8b71c8d08cdce6cb7169d867ff0dd2fa468c4576
 </svg>
