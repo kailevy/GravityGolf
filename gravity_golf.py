@@ -74,7 +74,6 @@ class GolfController():
     """ Represents controller for Gravity Golf Game """
     def __init__(self, model, screen):
         self.model = model
-        # self.input = Input(screen)
         self.mouse_press = False
         self.ball = self.model.ball
         self.screen = screen
@@ -88,26 +87,25 @@ class GolfController():
     def process_events(self):
         done = False
         pygame.event.pump
-        print self.ball.moving
         if not self.ball.moving:
             for events in pygame.event.get():
                 self.mouse_press = pygame.mouse.get_pressed()[0]
                 self.mx = pygame.mouse.get_pos()[0]
                 self.my = pygame.mouse.get_pos()[1]
                 if self.mouse_press and not self.initialized:
-                        self.initx = self.ball.rect.x
-                        self.inity = self.ball.rect.y
+                        self.initx = self.ball.rect.x + 7   #adjust to make line go from center of circle
+                        self.inity = self.ball.rect.y + 7   #adjust to make line go from center of circle
                         self.initialized = True
                 if not pygame.mouse.get_pressed()[0] and self.initialized:
+                    #get velocity based off of mouse movement
                     self.velocity = ( - (self.mx - self.initx), - (self.my - self.inity))
                 else:
                     self.velocity = (0, 0)
                 vx = self.velocity[0]
                 vy = self.velocity[1]
                 if (vx != 0 or vy != 0):
-                    self.ball.putt(vx,vy)
-                    self.initialized = False
-                    
+                    self.ball.putt(vx*3,vy*3)   #adjust to make hit harder
+                    self.initialized = False             
                 vx = 0
                 vy = 0
         return done
@@ -150,6 +148,8 @@ class Ball(pygame.sprite.Sprite):
         self.vel_y = 0 #20.0
         self.moving = False
 
+        self.hit_count = 0
+
         self.tiles = tiles
 
         self.image = pygame.image.load('img/ball.png')
@@ -161,6 +161,7 @@ class Ball(pygame.sprite.Sprite):
         self.vel_x = vx
         self.vel_y = vy
         self.moving = True
+        self.hit_count += 1
 
     def draw(self, screen):
         # Draw ball with transparent background - convert_alpha
@@ -169,7 +170,7 @@ class Ball(pygame.sprite.Sprite):
     def update(self, dt):
         """ Update ball due to passage of time """
 
-        print (self.vel_x, "    ", self.vel_y)
+        # print (self.vel_x, "    ", self.vel_y)
 
         if (math.sqrt((self.vel_x)**2 + (self.vel_y)**2)) < 40:
             self.vel_x = 0
