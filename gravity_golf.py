@@ -54,37 +54,71 @@ class GolfModel():
 
 class GolfView():
     """Represents the view of the game"""
-    def __init__(self, model, width, height):
+    def __init__(self, screen, model, controller, width, height):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = screen
         self.model = model
+        self.controller = controller
 
     def draw(self):
         """ Redraw the full game window """
         self.screen.fill((0,0,0)) #Set background to black
         self.model.level.draw(self.screen)
         self.model.ball.draw(self.screen)
+        if self.controller.initialized and self.controller.mouse_press:
+            pygame.draw.line(self.screen, WHITE, (self.controller.initx,self.controller.inity), 
+                (self.controller.mx, self.controller.my))   
         pygame.display.update()
 
 class GolfController():
     """ Represents controller for Gravity Golf Game """
-    def __init__(self, model):
+    def __init__(self, model, screen):
         self.model = model
+        # self.input = Input(screen)
+        self.mouse_press = False
+        self.ball = self.model.ball
+        self.screen = screen
+        self.initx = 0
+        self.inity = 0
+        self.initialized = False
+        self.mx = 0
+        self.my = 0
+        self.velocity = (0, 0)
 
     def process_events(self):
         done = False
         pygame.event.pump
-
-        # for event in pygame.event.get():
-        #     continue
+        print self.ball.moving
+        if not self.ball.moving:
+            for events in pygame.event.get():
+                self.mouse_press = pygame.mouse.get_pressed()[0]
+                self.mx = pygame.mouse.get_pos()[0]
+                self.my = pygame.mouse.get_pos()[1]
+                if self.mouse_press and not self.initialized:
+                        self.initx = self.ball.rect.x
+                        self.inity = self.ball.rect.y
+                        self.initialized = True
+                if not pygame.mouse.get_pressed()[0] and self.initialized:
+                    self.velocity = ( - (self.mx - self.initx), - (self.my - self.inity))
+                else:
+                    self.velocity = (0, 0)
+                vx = self.velocity[0]
+                vy = self.velocity[1]
+                if (vx != 0 or vy != 0):
+                    self.ball.putt(vx,vy)
+                    self.initialized = False
+                    
+                vx = 0
+                vy = 0
         return done
 
 class GolfGame():
     """Runs the game"""
     def __init__(self):
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.model = GolfModel(SCREEN_WIDTH, SCREEN_HEIGHT)
-        self.view = GolfView(self.model, SCREEN_WIDTH, SCREEN_HEIGHT)
-        self.controller = GolfController(self.model)
+        self.controller = GolfController(self.model, self.screen)
+        self.view = GolfView(self.screen, self.model, self.controller, SCREEN_WIDTH, SCREEN_HEIGHT)
         self.clock = pygame.time.Clock()
 
     def run(self):
@@ -112,11 +146,9 @@ class Ball(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         #Set relevant state variables
-
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.vel_x = 800 #20.0
-        self.vel_y = 800 #20.0
+        self.vel_x = 0 #20.0
+        self.vel_y = 0 #20.0
+        self.moving = False
 
         self.tiles = tiles
 
@@ -124,6 +156,11 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.rect = self.rect.move(pos_x, pos_y)
+
+    def putt(self, vx, vy):
+        self.vel_x = vx
+        self.vel_y = vy
+        self.moving = True
 
     def draw(self, screen):
         # Draw ball with transparent background - convert_alpha
@@ -135,6 +172,7 @@ class Ball(pygame.sprite.Sprite):
         if (math.sqrt((self.vel_x)**2 + (self.vel_y)**2)) < 10:
             self.vel_x = 0
             self.vel_y = 0
+            self.moving = False
 
         # x-axis updates and collisions
         self.rect.x += self.vel_x *dt
