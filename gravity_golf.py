@@ -7,6 +7,7 @@ Physics-Enhanced Mini Golf
 import pygame
 import os
 import numpy as np
+import math
 
 # Screen dimensions
 SCREEN_WIDTH  = 800
@@ -100,7 +101,7 @@ class GolfGame():
             self.model.update(dt) # Update model based on events
             self.view.draw() # Draw view
 
-            self.clock.tick(25) # Change in time
+            self.clock.tick(30) # Change in time
 
 
 class Ball(pygame.sprite.Sprite):
@@ -130,7 +131,10 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self, dt):
         """ Update ball due to passage of time """
-        print (self.vel_x , "/n" , self.vel_y)
+
+        if (math.sqrt((self.vel_x)**2 + (self.vel_y)**2)) < 10:
+            self.vel_x = 0
+            self.vel_y = 0
 
         # x-axis updates and collisions
         self.rect.x += self.vel_x *dt
@@ -159,7 +163,7 @@ class Ball(pygame.sprite.Sprite):
 
                 if vel_x > 0 and isinstance(tile, WallTile):
                     self.rect.right = tile.rect.left
-                    self.vel_x *= -.1
+                    self.vel_x *= -1
 
                 if vel_x < 0 and isinstance(tile, WallTile):
                     self.rect.left = tile.rect.right
@@ -167,7 +171,7 @@ class Ball(pygame.sprite.Sprite):
 
                 if vel_y > 0 and isinstance(tile, WallTile):
                     self.rect.bottom = tile.rect.top
-                    self.vel_y *= -.1
+                    self.vel_y *= -1
 
                 if vel_y < 0 and isinstance(tile, WallTile):
                     self.rect.top = tile.rect.bottom
