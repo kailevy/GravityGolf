@@ -61,8 +61,8 @@ class GolfView():
     def draw(self):
         """ Redraw the full game window """
         self.screen.fill((0,0,0)) #Set background to black
-        self.model.ball.draw(self.screen)
         self.model.level.draw(self.screen)
+        self.model.ball.draw(self.screen)
         pygame.display.update()
 
 class GolfController():
@@ -114,10 +114,8 @@ class Ball(pygame.sprite.Sprite):
 
         self.pos_x = pos_x
         self.pos_y = pos_y
-        self.vel_x = 100
-        self.vel_y = 100
-        self.acc_x = 0
-        self.acc_y = 0
+        self.vel_x = 800 #20.0
+        self.vel_y = 800 #20.0
 
         self.tiles = tiles
 
@@ -132,32 +130,36 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self, dt):
         """ Update ball due to passage of time """
-
-        self.vel_x = self.vel_x*.99
-        self.vel_y = self.vel_y*.99
+        print (self.vel_x , "/n" , self.vel_y)
 
         # x-axis updates and collisions
         self.rect.x += self.vel_x *dt
-        self.collide(self.vel_x, 0)
+        self.collide(self.vel_x, 0, dt)
 
         # y-axis updates and collisions
         self.rect.y += self.vel_y*dt
-        self.collide(0, self.vel_y)
+        self.collide(0, self.vel_y, dt)
 
-    def collide(self, vel_x, vel_y):
+    def collide(self, vel_x, vel_y, delta_t):
         """ Handle collisions between ball and walls """
 
         for tile in self.tiles:
 
             if pygame.sprite.collide_rect(self, tile):
-                print "collision!"
                 if isinstance(tile, ExitTile):
                     pass
                     #TODO: implement going to next level event
 
+                if self.vel_x != 0 and isinstance(tile, FrictionTile):
+                    self.vel_x *= tile.acceleration
+
+                if self.vel_y != 0 and isinstance(tile, FrictionTile):
+                    self.vel_y *= tile.acceleration
+
+
                 if vel_x > 0 and isinstance(tile, WallTile):
                     self.rect.right = tile.rect.left
-                    self.vel_x *= -1
+                    self.vel_x *= -.1
 
                 if vel_x < 0 and isinstance(tile, WallTile):
                     self.rect.left = tile.rect.right
@@ -165,7 +167,7 @@ class Ball(pygame.sprite.Sprite):
 
                 if vel_y > 0 and isinstance(tile, WallTile):
                     self.rect.bottom = tile.rect.top
-                    self.vel_y *= -1
+                    self.vel_y *= -.1
 
                 if vel_y < 0 and isinstance(tile, WallTile):
                     self.rect.top = tile.rect.bottom
@@ -182,7 +184,9 @@ class Level(pygame.sprite.Sprite):
         for row in xrange(len(self.map)):
             for x in xrange(len(self.map[row])):
                 #For each element in array, create relevant tile
-
+                if self.map[row][x] == 0:
+                    tile = FrictionTile(x*50, row*50)
+                    self.tiles.add(tile)
                 if self.map[row][x] == 1:
                     tile = WallTile(x*50, row*50)
                     self.tiles.add(tile)
@@ -204,6 +208,18 @@ class Tile(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.image.convert_alpha(), self.rect)
+
+class FrictionTile(Tile):
+    """Represents regular floor tile that has a friction"""
+    def __init__(self, x_pos, y_pos):
+        Tile.__init__(self, x_pos, y_pos)
+
+        self.acceleration = .99
+
+        self.image = pygame.image.load("img/frictionTile.png")
+        self.rect = self.image.get_rect()
+
+        self.rect = self.rect.move(self.x_pos, self.y_pos)
 
 class WallTile(Tile):
     """ Represents a wall tile that the golf ball will collide with """
