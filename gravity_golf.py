@@ -132,7 +132,9 @@ class Ball(pygame.sprite.Sprite):
     def update(self, dt):
         """ Update ball due to passage of time """
 
-        if (math.sqrt((self.vel_x)**2 + (self.vel_y)**2)) < 10:
+        print (self.vel_x, "    ", self.vel_y)
+
+        if (math.sqrt((self.vel_x)**2 + (self.vel_y)**2)) < 40:
             self.vel_x = 0
             self.vel_y = 0
 
