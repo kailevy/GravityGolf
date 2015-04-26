@@ -29,7 +29,7 @@ level0 = np.array(
     (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
     (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1),
     (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+    (1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
     (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
@@ -47,7 +47,7 @@ class GolfModel():
         self.width = width
         self.height = height
         self.level = Level(self.levels[self.current_level])
-        self.ball = Ball(100, 100, self.level.tiles)
+        self.ball = Ball(100, 100, self.level.tiles, self.level.planets)
 
     def update(self, delta_t):
     	self.ball.update(delta_t)
@@ -138,7 +138,7 @@ class GolfGame():
 
 class Ball(pygame.sprite.Sprite):
     """Represents a ball, for extension into: game ball, gravity ball..."""
-    def __init__(self, pos_x, pos_y, tiles):
+    def __init__(self, pos_x, pos_y, tiles, planets):
         """ Initialize a ball at specified position pos_x, pos_y """
 
         pygame.sprite.Sprite.__init__(self)
@@ -151,6 +151,7 @@ class Ball(pygame.sprite.Sprite):
         self.hit_count = 0
 
         self.tiles = tiles
+        self.planets = planets
 
         self.image = pygame.image.load('img/ball.png')
         self.rect = self.image.get_rect()
@@ -218,12 +219,17 @@ class Ball(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vel_y *= -1
 
+    def gravitate(self, vel_x, vel_y, delta_t):
+        for planet in self.planets:
+            
+
 class Level(pygame.sprite.Sprite):
     """ Represents a level """
     def __init__(self, map):
         pygame.sprite.Sprite.__init__(self)
         self.map = map
         self.tiles = pygame.sprite.Group()
+        self.planets = pygame.sprite.Group()
 
 		#Creates map of tiles from inputted np array
         for row in xrange(len(self.map)):
@@ -238,10 +244,18 @@ class Level(pygame.sprite.Sprite):
                 if self.map[row][x] == 2:
                     tile = ExitTile(x*50, row*50)
                     self.tiles.add(tile)
+                if self.map[row][x] == 3:
+                    tile = FrictionTile(x*50, row*50)
+                    self.tiles.add(tile)
+                    planet = Planet(x*50, row*50)
+                    self.planets.add(planet)
 
     def draw(self, screen):
         for tile in self.tiles:
             tile.draw(screen)
+
+        for planet in self.planets:
+            planet.draw(screen)
 
 class Tile(pygame.sprite.Sprite):
     """Represents a tile, for extension into: friction tile, wall tile, acceleration tile..."""
@@ -297,6 +311,22 @@ class ExitTile(Tile):
         self.image = pygame.image.load('img/exitTile.png')
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.x_pos, self.y_pos)        
+
+class Planet(pygame.sprite.Sprite):
+
+    def __init__(self, x_pos, y_pos):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+
+        self.image = pygame.image.load('img/planet.png')
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(self.x_pos, self.y_pos)
+
+    def draw(self, screen):
+        screen.blit(self.image.convert_alpha(), self.rect)
+
 
 if __name__ == '__main__':
     golf = GolfGame()
