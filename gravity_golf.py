@@ -186,6 +186,8 @@ class Ball(pygame.sprite.Sprite):
         self.rect.y += self.vel_y*dt
         self.collide(0, self.vel_y, dt)
 
+        self.gravitate(self.vel_x, self.vel_y, dt)
+
     def collide(self, vel_x, vel_y, delta_t):
         """ Handle collisions between ball and walls """
 
@@ -221,7 +223,16 @@ class Ball(pygame.sprite.Sprite):
 
     def gravitate(self, vel_x, vel_y, delta_t):
         for planet in self.planets:
-            
+            diff_x = self.rect.center[0] - planet.rect.center[0]
+            diff_y = self.rect.center[1] - planet.rect.center[1]
+
+            diff_total = math.sqrt(diff_x**2 + diff_y**2)
+
+            if (diff_total < 100):
+                self.vel_x -= 3*diff_x/(math.sqrt(abs(diff_x))+.1)
+                self.vel_y -= 3*diff_y/(math.sqrt(abs(diff_y))+.1)
+
+            # print diff_x, diff_y
 
 class Level(pygame.sprite.Sprite):
     """ Represents a level """
