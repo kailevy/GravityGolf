@@ -279,6 +279,15 @@ class Ball(pygame.sprite.Sprite):
                 if self.vel_y != 0 and isinstance(tile, FrictionTile):
                     self.vel_y *= tile.acceleration
 
+                if isinstance(tile, AccelTile):
+                    if tile.acceleration == 0:
+                        self.vel_y += 1
+                    if tile.acceleration == 1:
+                        self.vel_y -= 1
+                    if tile.acceleration == 2:
+                        self.vel_x += 1
+                    if tile.acceleration == 3:
+                        self. vel_x -= 1
 
                 if vel_x > 0 and isinstance(tile, WallTile):
                     self.rect.right = tile.rect.left
@@ -297,6 +306,7 @@ class Ball(pygame.sprite.Sprite):
                     self.vel_y *= -1
 
     def gravitate(self, vel_x, vel_y, delta_t):
+        """Represents interaction with planets"""
         for planet in self.planets:
             diff_x = self.rect.center[0] - planet.rect.center[0]
             diff_y = self.rect.center[1] - planet.rect.center[1]
@@ -390,21 +400,24 @@ class WallTile(Tile):
         self.rect = self.rect.move(self.x_pos, self.y_pos)
 
 class AccelTile(Tile):
+    """Represents a tile that will accelerate the ball in a certain direction"""
     def __init__(self, x_pos, y_pos, acceleration):
         Tile.__init__(self, x_pos, y_pos)
+        self.acceleration = acceleration
         if acceleration == 0:
-            self.image = pygame.image.load('img/negAccelTile')
+            self.image = pygame.image.load('img/downAccelTile.png')
         if acceleration == 1:
-            self.image = pygame.image.load('img/posAccelTile')
+            self.image = pygame.image.load('img/upAccelTile.png')
         if acceleration == 2:
-            self.image = pygame.image.load('img/rightAccelTile')
+            self.image = pygame.image.load('img/rightAccelTile.png')
         if acceleration == 3:
-            self.image = pygame.image.load('img/leftAccelTile') 
+            self.image = pygame.image.load('img/leftAccelTile.png') 
 
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.x_pos, self.y_pos)
 
 class ExitTile(Tile):
+    """Represent a the hole that send the player to the next level"""
     def __init__(self, x_pos, y_pos):
         Tile.__init__(self, x_pos, y_pos)
         self.image = pygame.image.load('img/exitTile.png')
@@ -412,6 +425,7 @@ class ExitTile(Tile):
         self.rect = self.rect.move(self.x_pos, self.y_pos)        
 
 class TitleTile(Tile):
+    """Tile that displays the title"""
     def __init__(self, x_pos, y_pos):
         Tile.__init__(self, x_pos, y_pos)
         self.image = pygame.image.load('img/title.png')
@@ -419,8 +433,9 @@ class TitleTile(Tile):
         self.rect = self.rect.move(self.x_pos, self.y_pos)        
 
 class Planet(pygame.sprite.Sprite):
-
     def __init__(self, x_pos, y_pos, mass):
+    """Represents a high mass object that attracts the ball towards it"""
+    def __init__(self, x_pos, y_pos):
         pygame.sprite.Sprite.__init__(self)
 
         self.x_pos = x_pos
