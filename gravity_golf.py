@@ -80,20 +80,33 @@ level2 = np.array(
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
 
-all_levels = [level0]
+all_levels = [level0,level1,level2]
+NEXTLEVEL = pygame.USEREVENT + 1
+next_level_event = pygame.event.Event(NEXTLEVEL, message="Next Level!")
 
 class GolfModel():
     """Represents the game state"""
     def __init__(self, width, height):
-        self.levels = all_levels
         self.current_level = 0
+        self.levels = all_levels
         self.width = width
         self.height = height
         self.level = Level(self.levels[self.current_level])
-        self.ball = Ball(200, 650, self.level.tiles, self.level.planets)
+        self.start_coords = (200,650)
+        self.ball = Ball(self.start_coords, self.level.tiles, self.level.planets)
 
     def update(self, delta_t):
     	self.ball.update(delta_t)
+
+    def next_level(self):
+        self.current_level += 1
+        self.level = Level(self.levels[self.current_level])        
+        if self.current_level == 1:
+            self.start_coords = (300,600)
+        if self.current_level == 2:
+            self.start_coords = (250,600)
+        self.ball = Ball(self.start_coords, self.level.tiles, self.level.planets)
+
 
 class GolfView():
     """Represents the view of the game"""
@@ -131,7 +144,10 @@ class GolfController():
         done = False
         pygame.event.pump
         if not self.ball.moving:
+            self.ball = self.model.ball
             for events in pygame.event.get():
+                if events.type == NEXTLEVEL:
+                    self.model.next_level()
                 self.mouse_press = pygame.mouse.get_pressed()[0]
                 self.mx = pygame.mouse.get_pos()[0]
                 self.my = pygame.mouse.get_pos()[1]
@@ -181,7 +197,7 @@ class GolfGame():
 
 class Ball(pygame.sprite.Sprite):
     """Represents a ball, for extension into: game ball, gravity ball..."""
-    def __init__(self, pos_x, pos_y, tiles, planets):
+    def __init__(self, pos, tiles, planets):
         """ Initialize a ball at specified position pos_x, pos_y """
 
         pygame.sprite.Sprite.__init__(self)
@@ -199,7 +215,7 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.image.load('img/ball.png')
         self.rect = self.image.get_rect()
 
-        self.rect = self.rect.move(pos_x, pos_y)
+        self.rect = self.rect.move(pos[0], pos[1])
 
     def putt(self, vx, vy):
         self.vel_x = vx
@@ -240,6 +256,8 @@ class Ball(pygame.sprite.Sprite):
                 if isinstance(tile, ExitTile) and (math.sqrt(vel_x**2 + vel_y**2) < 100):
                     self.vel_x = 0
                     self.vel_y = 0
+                    pygame.event.post(next_level_event)
+                    self.tiles = []
 
                 if self.vel_x != 0 and isinstance(tile, FrictionTile):
                     self.vel_x *= tile.acceleration
