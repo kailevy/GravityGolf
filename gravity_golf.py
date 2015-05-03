@@ -80,7 +80,24 @@ level2 = np.array(
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
 
-all_levels = [level0,level1,level2]
+congratulations = np.array(
+   [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+    (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
+all_levels = [level0,level1,level2,congratulations]
 NEXTLEVEL = pygame.USEREVENT + 1
 next_level_event = pygame.event.Event(NEXTLEVEL, message="Next Level!")
 
@@ -129,6 +146,8 @@ class GolfView():
             pygame.draw.line(self.screen, WHITE, (self.controller.initx,self.controller.inity), 
                 (self.controller.mx, self.controller.my))   
         self.draw_score()
+        if self.model.current_level == 3:
+            self.draw_congrats()
         pygame.display.update()
 
     def draw_score(self):
@@ -137,6 +156,10 @@ class GolfView():
         self.curr_score_surf = self.font.render("Strokes: " + str(self.model.curr_score), False, BLACK)
         self.screen.blit(self.curr_score_surf, (20, 70))
         self.screen.blit(self.score_surf, (20,20))
+
+    def draw_congrats(self):
+        self.gratz_surf = self.font.render("Game Complete!", False, BLACK)
+        self.screen.blit(self.gratz_surf,(350,400))
 
 class GolfController():
     """ Represents controller for Gravity Golf Game """
@@ -177,8 +200,9 @@ class GolfController():
                 if (vx != 0 or vy != 0):
                     self.ball.putt(vx*3,vy*3)   #adjust to make hit harder
                     self.initialized = False   
-                    self.model.score += 1    
-                    self.model.curr_score += 1      
+                    self.model.curr_score += 1 
+                    if not self.model.current_level == 3:   
+                        self.model.score += 1      
                 vx = 0
                 vy = 0
         return done
@@ -267,7 +291,7 @@ class Ball(pygame.sprite.Sprite):
         for tile in self.tiles:
 
             if pygame.sprite.collide_rect(self, tile):
-                if isinstance(tile, ExitTile) and (math.sqrt(vel_x**2 + vel_y**2) < 100):
+                if isinstance(tile, ExitTile) and (math.sqrt(vel_x**2 + vel_y**2) < 120):
                     self.vel_x = 0
                     self.vel_y = 0
                     pygame.event.post(next_level_event)
@@ -313,9 +337,9 @@ class Ball(pygame.sprite.Sprite):
 
             diff_total = math.sqrt(diff_x**2 + diff_y**2)
 
-            if (diff_total < 100):
-                self.vel_x -= 3*diff_x/(math.sqrt(abs(diff_x))+.1)
-                self.vel_y -= 3*diff_y/(math.sqrt(abs(diff_y))+.1)
+            if (diff_total < planet.mass * 3):
+                self.vel_x -= (planet.mass/25)*diff_x/(math.sqrt(abs(diff_x))+.1)
+                self.vel_y -= (planet.mass/25)*diff_y/(math.sqrt(abs(diff_y))+.1)
 
             # print diff_x, diff_y
 
@@ -347,12 +371,12 @@ class Level(pygame.sprite.Sprite):
                 if self.map[row][x] == 3:
                     tile = FrictionTile(x*50, row*50)
                     self.tiles.add(tile)
-                    planet = Planet(x*50, row*50, 50)
+                    planet = Planet(x*50, row*50, 60)
                     self.planets.add(planet)
                 if self.map[row][x] == 4:
                     tile = WallTile(x*50, row*50)
                     self.tiles.add(tile)
-                    planet = Planet(x*50, row*50, 50)
+                    planet = Planet(x*50, row*50, 60)
                     self.planets.add(planet)
                 if self.map[row][x] == 5:
                     tile = WallTile(x*50, row*50)
@@ -448,7 +472,8 @@ class TitleTile(Tile):
         Tile.__init__(self, x_pos, y_pos)
         self.image = pygame.image.load('img/title.png')
         self.rect = self.image.get_rect()
-        self.rect = self.rect.move(self.x_pos, self.y_pos)        
+        self.rect = self.rect.move(self.x_pos, self.y_pos) 
+        self.mass = 0        
 
 class Planet(pygame.sprite.Sprite):
     def __init__(self, x_pos, y_pos, mass):
