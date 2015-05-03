@@ -27,8 +27,8 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 level0 = np.array(
    [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
@@ -94,6 +94,8 @@ class GolfModel():
         self.level = Level(self.levels[self.current_level])
         self.start_coords = (200,650)
         self.ball = Ball(self.start_coords, self.level.tiles, self.level.planets)
+        self.score = 0
+        self.curr_score = 0
 
     def update(self, delta_t):
     	self.ball.update(delta_t)
@@ -106,6 +108,7 @@ class GolfModel():
         if self.current_level == 2:
             self.start_coords = (250,600)
         self.ball = Ball(self.start_coords, self.level.tiles, self.level.planets)
+        self.curr_score = 0
 
 
 class GolfView():
@@ -115,6 +118,7 @@ class GolfView():
         self.screen = screen
         self.model = model
         self.controller = controller
+        self.font = pygame.font.Font(CURR_DIR + '/visitor2.ttf', 80)
 
     def draw(self):
         """ Redraw the full game window """
@@ -124,7 +128,15 @@ class GolfView():
         if self.controller.initialized and self.controller.mouse_press:
             pygame.draw.line(self.screen, WHITE, (self.controller.initx,self.controller.inity), 
                 (self.controller.mx, self.controller.my))   
+        self.draw_score()
         pygame.display.update()
+
+    def draw_score(self):
+        """Draws score in corner"""
+        self.score_surf = self.font.render("Total Score: " + str(self.model.score), False, BLACK)
+        self.curr_score_surf = self.font.render("Strokes: " + str(self.model.curr_score), False, BLACK)
+        self.screen.blit(self.curr_score_surf, (20, 70))
+        self.screen.blit(self.score_surf, (20,20))
 
 class GolfController():
     """ Represents controller for Gravity Golf Game """
@@ -164,7 +176,9 @@ class GolfController():
                 vy = self.velocity[1]
                 if (vx != 0 or vy != 0):
                     self.ball.putt(vx*3,vy*3)   #adjust to make hit harder
-                    self.initialized = False             
+                    self.initialized = False   
+                    self.model.score += 1    
+                    self.model.curr_score += 1      
                 vx = 0
                 vy = 0
         return done
