@@ -181,6 +181,8 @@ class GolfController():
         if not self.ball.moving:
             self.ball = self.model.ball
             for events in pygame.event.get():
+                if events.type == pygame.QUIT:
+                    done = True
                 if events.type == NEXTLEVEL:
                     self.model.next_level()
                 self.mouse_press = pygame.mouse.get_pressed()[0]
