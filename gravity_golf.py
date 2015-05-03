@@ -37,8 +37,8 @@ level0 = np.array(
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1),
-    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1),
+    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1),
+    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
 
@@ -48,10 +48,10 @@ level1 = np.array(
    [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
@@ -66,9 +66,9 @@ level2 = np.array(
    [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 0, 0, 8, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 0, 0, 8, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 7, 7, 1, 6, 6, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
     (1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1),
@@ -281,13 +281,13 @@ class Ball(pygame.sprite.Sprite):
 
                 if isinstance(tile, AccelTile):
                     if tile.acceleration == 0:
-                        self.vel_y += 1
+                        self.vel_y += 5
                     if tile.acceleration == 1:
-                        self.vel_y -= 1
+                        self.vel_y -= 5
                     if tile.acceleration == 2:
-                        self.vel_x += 1
+                        self.vel_x += 5
                     if tile.acceleration == 3:
-                        self. vel_x -= 1
+                        self. vel_x -= 5
 
                 if vel_x > 0 and isinstance(tile, WallTile):
                     self.rect.right = tile.rect.left
@@ -326,6 +326,7 @@ class Level(pygame.sprite.Sprite):
         self.map = map
         self.tiles = pygame.sprite.Group()
         self.planets = pygame.sprite.Group()
+        self.exits = pygame.sprite.Group()
 
 		#Creates map of tiles from inputted np array
         for row in xrange(len(self.map)):
@@ -342,21 +343,35 @@ class Level(pygame.sprite.Sprite):
                     self.tiles.add(tile)
                     exittile = ExitTile(x*50, row*50)
                     self.tiles.add(exittile)
+                    self.exits.add(exittile)
                 if self.map[row][x] == 3:
                     tile = FrictionTile(x*50, row*50)
                     self.tiles.add(tile)
-                    planet = Planet(x*50, row*50)
+                    planet = Planet(x*50, row*50, 50)
                     self.planets.add(planet)
                 if self.map[row][x] == 4:
                     tile = WallTile(x*50, row*50)
                     self.tiles.add(tile)
-                    planet = Planet(x*50, row*50)
+                    planet = Planet(x*50, row*50, 50)
                     self.planets.add(planet)
                 if self.map[row][x] == 5:
                     tile = WallTile(x*50, row*50)
                     self.tiles.add(tile)
                     title = TitleTile(x*50, row*50)
                     self.planets.add(title)
+                if self.map[row][x] == 6:
+                    tile = AccelTile(x*50, row*50, 0)
+                    self.tiles.add(tile)
+                if self.map[row][x] == 7:
+                    tile = AccelTile(x*50, row*50, 1)
+                    self.tiles.add(tile)
+                if self.map[row][x] == 8:
+                    tile = AccelTile(x*50, row*50, 2)
+                    self.tiles.add(tile)
+                if self.map[row][x] == 9:
+                    tile = AccelTile(x*50, row*50, 3)
+                    self.tiles.add(tile)
+
 
 
     def draw(self, screen):
@@ -365,6 +380,9 @@ class Level(pygame.sprite.Sprite):
 
         for planet in self.planets:
             planet.draw(screen)
+        # so that the exit is drawn last and definitely shows up
+        for exit in self.exits:
+            exit.draw(screen)
 
 class Tile(pygame.sprite.Sprite):
     """Represents a tile, for extension into: friction tile, wall tile, acceleration tile..."""
@@ -434,8 +452,7 @@ class TitleTile(Tile):
 
 class Planet(pygame.sprite.Sprite):
     def __init__(self, x_pos, y_pos, mass):
-    """Represents a high mass object that attracts the ball towards it"""
-    def __init__(self, x_pos, y_pos):
+        """Represents a high mass object that attracts the ball towards it"""
         pygame.sprite.Sprite.__init__(self)
 
         self.x_pos = x_pos
