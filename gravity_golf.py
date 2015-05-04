@@ -37,8 +37,8 @@ level0 = np.array(
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1),
-    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1),
+    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1),
+    (1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)])
 
@@ -48,10 +48,10 @@ level1 = np.array(
    [(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 1, 1, 1),
-    (1, 1, 1, 1, 1, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 1, 1, 1),
+    (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     (1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
@@ -315,35 +315,41 @@ class Ball(pygame.sprite.Sprite):
                     if tile.acceleration == 3:
                         self. vel_x -= 5
 
+                # If golf ball moving right, reverse x velocity
                 if vel_x > 0 and isinstance(tile, WallTile):
                     self.rect.right = tile.rect.left
                     self.vel_x *= -1
 
+                # If golf ball moving left, reverse x velocity
                 if vel_x < 0 and isinstance(tile, WallTile):
                     self.rect.left = tile.rect.right
                     self.vel_x *= -1
 
+                # If golf ball moving up, reverse y velocity
                 if vel_y > 0 and isinstance(tile, WallTile):
                     self.rect.bottom = tile.rect.top
                     self.vel_y *= -1
 
+                # If golf ball moving down, reverse y velocity
                 if vel_y < 0 and isinstance(tile, WallTile):
                     self.rect.top = tile.rect.bottom
                     self.vel_y *= -1
 
     def gravitate(self, vel_x, vel_y, delta_t):
         """Represents interaction with planets"""
+        g_const = 300
         for planet in self.planets:
             diff_x = self.rect.center[0] - planet.rect.center[0]
             diff_y = self.rect.center[1] - planet.rect.center[1]
 
             diff_total = math.sqrt(diff_x**2 + diff_y**2)
 
-            if (diff_total < planet.mass * 3):
-                self.vel_x -= (planet.mass/25)*diff_x/(math.sqrt(abs(diff_x))+.1)
-                self.vel_y -= (planet.mass/25)*diff_y/(math.sqrt(abs(diff_y))+.1)
+            ratio_x = diff_x/diff_total
+            ratio_y = diff_y/diff_total
 
-            # print diff_x, diff_y
+            self.vel_x -= ratio_x*g_const*(planet.mass)/(((diff_total)**2)+.1)
+            self.vel_y -= ratio_y*g_const*(planet.mass)/(((diff_total)**2)+.1)
+
 
 class Level(pygame.sprite.Sprite):
     """ Represents a level """
